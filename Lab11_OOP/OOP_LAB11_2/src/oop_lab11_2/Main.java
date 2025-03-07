@@ -12,7 +12,7 @@ public class Main {
             cust.getAcct().withdraw(200);
     }
     catch(WithdrawException e){
-      throw new WithdrawException("Account "+acct1.getName()+" has not enough money!");
+        System.out.println(e);
     }
     finally{
         System.out.println("Thank you.");

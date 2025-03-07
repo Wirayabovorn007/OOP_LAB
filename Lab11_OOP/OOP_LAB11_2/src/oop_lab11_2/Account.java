@@ -22,7 +22,7 @@ public class Account {
         if(this.balance - a < 0){
             throw new WithdrawException("Account "+this.name+" has not enough money.");
         }
-        if (a>0 & this.balance-a >0){
+        if (a>0 & this.balance-a >=0){
             this.balance -= a;
             System.out.println(a+" baht is withdrawn from "+this.name+".");
         }

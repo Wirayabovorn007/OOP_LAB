@@ -2,11 +2,11 @@ package oop_lab11_1;
 
 public class ExceptionDemo {
 
-    public void cal(String numA, String numB, String numC) {
+    public static void main(String[] args) {
         try {
-            double a = Double.parseDouble(numA);
-            double b = Double.parseDouble(numB);
-            double c = Double.parseDouble(numC);
+            double a = Double.parseDouble(args[0]);
+            double b = Double.parseDouble(args[1]);
+            double c = Double.parseDouble(args[2]);
 
             double x = b * b - 4 * a * c;
 
@@ -17,12 +17,15 @@ public class ExceptionDemo {
             System.out.println("x2: " + x2);
         } 
         catch (NumberFormatException e) {
-            if (isNull(numA) || isNull(numB) || isNull(numC)) {
+            if (isNull(args[0]) || isNull(args[1]) || isNull(args[2])) {
                 System.out.println("Please enter 3 numbers as a, b, and c respectively.");
             } 
             else {
                 System.out.println("Please input data in number format only.");
             }
+         
+        }catch(ArrayIndexOutOfBoundsException e){
+            System.out.println("Please enter 3 numbers as a, b, and c respectively.");
         }
     }
 
@@ -38,5 +41,7 @@ public class ExceptionDemo {
             return false;
         }
     }
+
+    
 
 }
