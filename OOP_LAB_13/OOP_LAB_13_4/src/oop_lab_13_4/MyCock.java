@@ -14,7 +14,7 @@ public class MyCock extends JLabel implements Runnable {
    
     
     public MyCock(){
-        this.setFont(new Font("Arial", Font.PLAIN, 84));
+        this.setFont(new Font("Arial", Font.BOLD, 84));
         this.setText("00:00:00");
         this.addMouseListener(new MouseAdapter(){
             @Override
