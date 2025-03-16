@@ -2,17 +2,18 @@
 package oop_lab_14_2;
 
 import java.util.*;
+import javax.swing.JOptionPane;
+import java.io.*;
 
-public class Book {
+public class Book implements Serializable{
+    
+    public static File file = new File("src/oop_lab_14_2/bookData.dat");
 
     private String name;
     private double price;
     private String type;
     
-    private static ArrayList<Book> general = new ArrayList<>();
-    private static ArrayList<Book> computer = new ArrayList<>();
-    private static ArrayList<Book> mathNsci = new ArrayList<>();
-    private static ArrayList<Book> photo3 = new ArrayList<>();
+    private static ArrayList<Book> book = new ArrayList<>();
     
     public Book(){
         this("", 0.0, "");
@@ -23,14 +24,7 @@ public class Book {
         this.price = price;
         this.type = type; 
         
-        switch(this.type){
-            case "General" -> general.add(this);
-            case "Computer" -> computer.add(this);
-            case "Math&Sci" -> mathNsci.add(this);
-            case "Photo3" -> photo3.add(this);
-        }
-        
-        System.out.println("Create succes!");
+        book.add(this);
     }
 
     public String getName() {
@@ -57,23 +51,68 @@ public class Book {
         this.type = type;
     }
 
-    public ArrayList<Book> getGeneral() {
-        return general;
-    }
-
-    public ArrayList<Book> getComputer() {
-        return computer;
-    }
-
-    public ArrayList<Book> getMathNsci() {
-        return mathNsci;
-    }
-
-    public ArrayList<Book> getPhoto3() {
-        return photo3;
+    public ArrayList<Book> getBook() {
+        return book;
     }
     
+    
+    public void updateBook(int index, String name, double price, String type){
+        Book editingB = book.get(index);
+        editingB.setName(name);
+        editingB.setPrice(price);
+        editingB.setType(type);
+        
+        JOptionPane.showMessageDialog(null, "Done it.");
+    }
+    
+    public void deleteBook(int index){
+        book.remove(index);
+        JOptionPane.showMessageDialog(null, "Done it.");
+    }
+    
+    public void saveData(){
+        try(ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(file))){
+            os.writeObject(new ArrayList<>(book));
+            System.out.println("Data Save!");
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
 
-
+    public void loadData(){
+        
+        if(!file.exists() || file.length() ==0){
+            return;
+        }
+        
+        if(fileExist()){
+            try(ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))){
+                Object obj = in.readObject();
+                if(obj instanceof ArrayList<?>){
+                    System.out.println("Reading BOOK obj");
+                    book = (ArrayList<Book>) obj;
+                }
+            }catch(IOException | ClassNotFoundException e){
+                e.printStackTrace();
+        }
+        }
+        else{
+            createFile();
+        }
+    }
+    
+    public void createFile(){
+        try{
+           file.createNewFile();    
+            }catch(IOException e){
+                    e.printStackTrace();
+           }
+        loadData();
+        }
+    
+    
+    public static boolean fileExist(){
+        return file.exists();
+    }
     
 }

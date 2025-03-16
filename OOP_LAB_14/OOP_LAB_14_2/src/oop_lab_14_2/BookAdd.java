@@ -7,15 +7,16 @@ import java.util.*;
 
 public class BookAdd{
     JFrame fr = new JFrame();
-    BookView bv = new BookView(false);
-    
+    BookView bv;
     String name;
     Double price;
     JTextField namet = new JTextField(15);
     JTextField pricet = new  JTextField(15);
     
     
-    public BookAdd(){
+    public BookAdd(BookView bv){
+        this.bv = bv;
+        JComboBox typet = new  JComboBox(bv.bookType);
         JPanel space = new JPanel();
         
         JPanel lp = new JPanel();
@@ -31,7 +32,7 @@ public class BookAdd{
         JPanel rp = new JPanel();
         rp.setLayout(new BoxLayout(rp, BoxLayout.Y_AXIS));
         
-        JComboBox typet = new  JComboBox(bv.bookType);
+       
         
         rp.add(namet);
         rp.add(pricet);
@@ -47,7 +48,7 @@ public class BookAdd{
         tp.add(rp);
         
         
-        insert.addActionListener(e-> insertBook());
+        insert.addActionListener(e-> insertBook(typet));
         
         fr.add(tp, BorderLayout.NORTH);
         fr.add(btn, BorderLayout.CENTER);
@@ -60,12 +61,16 @@ public class BookAdd{
     }
     
     
-    public void insertBook(){
+    public void insertBook(JComboBox typet){
         name = namet.getText();
         price = Double.parseDouble(pricet.getText());
-        String selectedType = (String) bv.cb.getSelectedItem();
+        String selectedType = (String) typet.getSelectedItem();
         new Book(name, price, selectedType);
-        JOptionPane.showMessageDialog(null, "Done it.");
+        bv.updateVal(0);
+        JOptionPane.showMessageDialog(null, "Done it.", "Information", JOptionPane.INFORMATION_MESSAGE);
+        fr.dispose();
+        
+        
     }
     
     

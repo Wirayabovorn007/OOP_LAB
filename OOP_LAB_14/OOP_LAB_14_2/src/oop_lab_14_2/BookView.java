@@ -4,6 +4,7 @@ package oop_lab_14_2;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
+import java.awt.event.*;
 import javax.swing.border.*;
 
 public class BookView {
@@ -19,18 +20,18 @@ public class BookView {
     JComboBox cb = new JComboBox(bookType);
     
     int ind = 0;
+    
     JTextField indtf = new JTextField(String.valueOf(ind));
     JTextField nametf = new JTextField();
    
     JTextField pricetf = new JTextField();
    
-    public BookView(boolean show){
-        frame.setVisible(show);
-    }
-    
     public BookView(){
         
         b =new Book();
+        b.loadData();
+        
+        selectedList = b.getBook();
         
          nametf.setPreferredSize(new Dimension(150, 40));
          pricetf.setPreferredSize(new Dimension(150, 40));
@@ -79,19 +80,19 @@ public class BookView {
         
         JPanel bottomP = new JPanel(new FlowLayout());
         JButton add = new JButton("Add");
-        add.addActionListener(e-> new BookAdd());
+        add.addActionListener(e-> new BookAdd(this));
         JButton update = new JButton("Update");
+        
+        update.addActionListener(e-> b.updateBook(ind, nametf.getText(), Double.valueOf(pricetf.getText()),String.valueOf( cb.getSelectedItem())));
+        
         JButton delete = new JButton("Delete");
+        delete.addActionListener(e->b.deleteBook(ind));
         
         bottomP.add(add);
         bottomP.add(update);
         bottomP.add(delete);
         
         
-        //Set value
-        nametf.setText("");
-        pricetf.setText("0.00");
-        updateSelectedList();
         
         
         
@@ -104,7 +105,14 @@ public class BookView {
         
         frame.pack();
         frame.setResizable(false);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.addWindowListener(new WindowAdapter(){
+            public void windowClosing(WindowEvent e){
+                b.saveData();
+                System.exit(0);
+            }
+            
+        });
         frame.setVisible(true);
         
         
@@ -116,13 +124,13 @@ public class BookView {
         indtf.setText(String.valueOf(index));
         nametf.setText(selectedList.get(index).getName());
         pricetf.setText(String.valueOf(selectedList.get(index).getPrice()));
+        cb.setSelectedItem(selectedList.get(index).getType());
         
     }
     
     
     
     public void next(){
-        updateSelectedList();
         ind++;
         if(ind>selectedList.size()-1){
             ind=0;
@@ -131,7 +139,6 @@ public class BookView {
     }
     
        public void prev(){
-        updateSelectedList();
         ind--;
         if(ind<0){
             ind=selectedList.size()-1;
@@ -141,15 +148,7 @@ public class BookView {
     }
        
 
-    public void updateSelectedList(){
-        String selectedType = (String) cb.getSelectedItem();
-        switch(selectedType){
-            case "General" -> selectedList = b.getGeneral();
-            case "Computer" -> selectedList = b.getComputer();
-            case "Math&Sci" -> selectedList = b.getMathNsci();
-            case "Photo3" -> selectedList = b.getPhoto3();
-        }
-    }
+    
     
     
     public static void main(String[] args) {
